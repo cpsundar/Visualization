@@ -10,12 +10,14 @@ console.log(`inside build meta data ${sample}`);
 
     d3.json(`/metadata/${sample}`).then((samplemetadata) => {
       //samplemetadata.forEach((metasample) => {
-        // metadataobj.html(`Age:${samplemetadata.AGE}`);
-        // metadataobj.html(`BBTYPE:${samplemetadata.BBTYPE}`);
-        // metadataobj.html(`ETHNICITY:${samplemetadata.ETHNICITY}`);
-        // metadataobj.html(`GENDER:${samplemetadata.GENDER}`);
-        // metadataobj.html(`LOCATION:${samplemetadata.LOCATION}`);
-        metadataobj.html(` <p class="panel-body">Age:${samplemetadata.AGE} <br> BBTYPE:${samplemetadata.BBTYPE} <br> ETHNICITY:${samplemetadata.ETHNICITY} <br> GENDER:${samplemetadata.GENDER} <br> LOCATION:${samplemetadata.LOCATION} <br>  SAMPLEID:${samplemetadata.sample} </p>`);
+        // metadataobj.html(`Age:${samplemetadata.AGE} <br>`);
+        // metadataobj.html(`BBTYPE:${samplemetadata.BBTYPE} <br> `);
+        // metadataobj.html(`ETHNICITY:${samplemetadata.ETHNICITY} <br>`);
+        // metadataobj.html(`GENDER:${samplemetadata.GENDER} <br>`);
+        // metadataobj.html(`LOCATION:${samplemetadata.LOCATION} <br>`);
+        // metadataobj.html(`SAMPLEID:${samplemetadata.sample} <br>`);
+        
+        metadataobj.html(` <div>Age:${samplemetadata.AGE} <br> BBTYPE:${samplemetadata.BBTYPE} <br> ETHNICITY:${samplemetadata.ETHNICITY} <br> GENDER:${samplemetadata.GENDER} <br> LOCATION:${samplemetadata.LOCATION} <br>  SAMPLEID:${samplemetadata.sample} </div>`);
        //console.log(`Age:${samplemetadata.AGE}`);
       //});
 
@@ -42,17 +44,47 @@ function buildCharts(sample) {
     // @TODO: Build a Pie Chart
     // HINT: You will need to use slice() to grab the top 10 sample_values,
     // otu_ids, and labels (10 each).
-    data = [{
-      "labels": sampleadata["otu_ids"],
-      "values": sampleadata["sample_values"],
-      "type": "pie"}];
 
+      // scatter plot
+      var bubbledata = [
+        {
+          x: sampleadata["otu_ids"],
+          y: sampleadata["sample_values"],
+          mode: 'markers',
+          marker: {
+            size:sampleadata["sample_values"],
+            color: sampleadata["otu_ids"]
+          },
+          text: sampleadata["otu_labels"],
+          type: 'scatter'
+        }
+      ];
+      
       var layout = {
-            title: "Pie Chart",
-            };
+        //title: 'Scatter Plot',
+        xaxis:{title:"OTU ID"}
+      };
+      Plotly.newPlot('bubble', bubbledata, layout);
 
-      console.log(`graph data: ${data}`)
-      Plotly.newPlot("pie", data, layout);
+
+      //Pie chart
+      // slice to top 10
+      console.log(`sliced data: ${sampleadata["otu_ids"].slice(0,10)}`)
+      data = [{
+        "labels": sampleadata["otu_ids"].slice(0,10),
+        "values": sampleadata["sample_values"].slice(0,10),
+        "text": sampleadata["otu_labels"].slice(0,10),
+        "type": "pie"
+        
+      }]
+  
+        var layout = {
+              //title: "Pie Chart",
+              };
+  
+        //console.log(`graph data: ${data}`)
+        Plotly.newPlot("pie", data, layout);
+  
 
     });
 }
@@ -72,7 +104,7 @@ function init() {
         .property("value", sample);
     });
 
-    console.log(sampleNames);
+    //console.log(sampleNames);
     // Use the first sample from the list to build the initial plots
     const firstSample = sampleNames[0];
      buildCharts(firstSample);
