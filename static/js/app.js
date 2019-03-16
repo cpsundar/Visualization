@@ -53,15 +53,16 @@ function buildCharts(sample) {
           mode: 'markers',
           marker: {
             size:sampleadata["sample_values"],
-            color: sampleadata["otu_ids"]
+            color: sampleadata["otu_ids"]           
           },
-          text: sampleadata["otu_labels"],
+          hovertext: sampleadata["otu_labels"].slice(0,10),
           type: 'scatter'
         }
       ];
       
       var layout = {
         //title: 'Scatter Plot',
+        //text: sampleadata["otu_labels"].slice(0,10),
         xaxis:{title:"OTU ID"}
       };
       Plotly.newPlot('bubble', bubbledata, layout);
@@ -73,13 +74,14 @@ function buildCharts(sample) {
       data = [{
         "labels": sampleadata["otu_ids"].slice(0,10),
         "values": sampleadata["sample_values"].slice(0,10),
-        "text": sampleadata["otu_labels"].slice(0,10),
+       "hovertext": sampleadata["otu_labels"].slice(0,10),
         "type": "pie"
         
       }]
   
         var layout = {
               //title: "Pie Chart",
+              //text: sampleadata["otu_labels"].slice(0,10)
               };
   
         //console.log(`graph data: ${data}`)
